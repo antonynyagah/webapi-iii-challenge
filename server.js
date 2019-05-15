@@ -1,15 +1,19 @@
-const express = 'express';
+const express = require('express')
+const port = 8008
+const server = express()
 
-const server = express();
-
-server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`)
-});
+server.use(express.json())
 
 //custom middleware
 
-function logger(req, res, next) {
+const middlewares = require('./middleware')
+server.use(middlewares.logger)
 
-};
+server.get('/', (req, res) => {
+  res.send(`<h2>Let's write some middleware!</h2>`)
+})
 
-module.exports = server;
+server.listen(port, () => {
+  console.log(`listen from port ${port}...`)
+})
+module.exports = server
