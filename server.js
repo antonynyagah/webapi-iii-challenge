@@ -1,15 +1,27 @@
-const express = 'express';
+const express = require('express')
+const port = 4000
+const server = express()
 
-const server = express();
+const UserRouter = require('./users/userRouter')
+const PostRouter = require('./posts/postRouter')
 
-server.get('/', (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`)
-});
+server.use(express.json())
 
 //custom middleware
 
-function logger(req, res, next) {
+const middlewares = require('./middleware')
+server.use(middlewares.logger)
 
-};
+//Routes
+server.use('/api/users', UserRouter)
+server.use('/api/posts', PostRouter)
 
-module.exports = server;
+
+server.get('/', (req, res) => {
+  res.send(`<h2>Let's write some middleware!</h2>`)
+})
+
+server.listen(port, () => {
+  console.log(`listen from port ${port}...`)
+})
+module.exports = server
